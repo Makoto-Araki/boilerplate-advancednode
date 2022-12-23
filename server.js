@@ -49,6 +49,13 @@ app.use(passport.initialize());
 // Session initialized
 app.use(passport.session());
 
+// Connect Mongo database
+myDB(async client => {
+  //
+}).catch(err => {
+  //
+});
+
 app.route('/').get((req, res) => {
   res.render('index', {
     title: 'Hello',
