@@ -15,7 +15,7 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', './views/pug');
 
-// Session Mangement
+// App manage session by this options
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -23,10 +23,10 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-// Passport initialized
+// App initialize passport
 app.use(passport.initialize());
 
-// Session initialized
+// App initialize passport session
 app.use(passport.session());
 
 // FCC testing
@@ -37,10 +37,10 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect Mongo database
+// App connect Mongo database
 myDB(async client => {
   
-  // Connect collection
+  // App connect collection
   const myDataBase = await client.db('test').collection('users');
 
   // GET - URL/
@@ -48,7 +48,21 @@ myDB(async client => {
     res.render('index', {
       title: 'Connected to database',
       message: 'Please log in',
+      showLogin: true,
     });
+  });
+
+  // POST - URL/login
+  app.route('/login').post(
+    passport.authenticate('local', { failureRedirect: '/' }),
+    (req, res) => {
+      res.redirect('/profile');
+    }
+  );
+
+  // GET - URL/profile
+  app.route('/profile').get((req, res) => {
+    res.render('/profile');
   });
 
   // Strategy
