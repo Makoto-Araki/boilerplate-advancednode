@@ -70,6 +70,19 @@ myDB(async client => {
     }
   );
 
+  // GET - URL/logout
+  app.route('/logout').get((req, res) => {
+    req.logout();
+    res.redirect('/');
+  });
+
+  // 404 Error
+  app.use((req, res, next) => {
+    res.status(404)
+      .type('text')
+      .send('Not Found');
+  });
+  
   // Passport use Strategy
   passport.use(new LocalStrategy((username, password, done) => {
     myDataBase.findOne({ username: username }, (err, user) => {
