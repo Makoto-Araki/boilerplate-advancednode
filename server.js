@@ -52,7 +52,7 @@ myDB(async client => {
     });
   });
 
-  // POST - URL/login
+  // POST - URL/login with Passport
   app.route('/login').post(
     passport.authenticate('local', { failureRedirect: '/' }),
     (req, res) => {
@@ -61,11 +61,14 @@ myDB(async client => {
   );
 
   // GET - URL/profile
-  app.route('/profile').get((req, res) => {
-    res.render('/profile');
-  });
+  app.route('/profile').get(
+    ensureAuthenticated,
+    (req, res) => {
+      res.render('/profile');
+    }
+  );
 
-  // Strategy
+  // Passport use Strategy
   passport.use(new LocalStrategy((username, password, done) => {
     myDataBase.findOne({ username: username }, (err, user) => {
       console.log(`User ${username} attempted to log in.`);
@@ -76,14 +79,14 @@ myDB(async client => {
     });
   }));
   
-  // User object serialize
+  // Passport serialize user object
   passport.serializeUser(
     (user, done) => {
       done(null, user._id);
     }
   );
   
-  // User object deserialize
+  // Passport deserialize user object
   passport.deserializeUser(
     (id, done) => {
       myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
@@ -100,6 +103,14 @@ myDB(async client => {
     });
   });
 });
+
+// Check if user is logged in
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+};
 
 // Port
 const PORT = process.env.PORT || 3000;
