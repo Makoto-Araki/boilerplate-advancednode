@@ -46,8 +46,8 @@ myDB(async client => {
   // GET - URL/
   app.route('/').get((req, res) => {
     res.render('index', {
-      title: 'Connected to database',
-      message: 'Please log in',
+      title: 'Connected to Database',
+      message: 'Please login',
       showLogin: true,
     });
   });
@@ -64,7 +64,9 @@ myDB(async client => {
   app.route('/profile').get(
     ensureAuthenticated,
     (req, res) => {
-      res.render('/profile');
+      res.render('/profile', {
+        username: req.user.username
+      });
     }
   );
 
