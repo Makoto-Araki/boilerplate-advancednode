@@ -47,7 +47,7 @@ myDB(async client => {
   routes(app, myDataBase);
   
   // App load auth.js
-  auth(app, myDatabase);
+  auth(app, myDataBase);
   
 }).catch(err => {
   app.route('/').get((req, res) => {

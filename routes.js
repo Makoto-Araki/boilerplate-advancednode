@@ -11,6 +11,7 @@ module.exports = function (app, myDataBase) {
       message: 'Please login',
       showLogin: true,
       showRegistration: true,
+      showSocialAuth: true
     });
   });
 
@@ -69,6 +70,19 @@ module.exports = function (app, myDataBase) {
       res.redirect('/profile');
     }
   );
+
+  // POST - URL/auth/github to Github
+  app.route('/auth/github').get(
+    passport.authenticate('github')
+  );
+
+  // GET - URL/auth/github/callback from Github
+  app.route('/auth/github/callback').get(
+    passport.authenticate('github', { failureRedirect: '/' }),
+    (req, res) => {
+      res.redirect('/profile');
+    }
+  )
   
   // 404 Error (Described at the end of all routes)
   app.use((req, res, next) => {
