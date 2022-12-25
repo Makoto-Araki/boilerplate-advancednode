@@ -54,9 +54,11 @@ module.exports = function (app, myDataBase) {
             email: Array.isArray(profile.emails) ? profile.emails[0].value : 'No public email',
             created_on: new Date(),
             provider: profile.provider || ''
-          }, $set: {
+          },
+          $set: {
             last_login: new Date()
-          }, $inc: {
+          },
+          $inc: {
             login_count: 1
           }
         },

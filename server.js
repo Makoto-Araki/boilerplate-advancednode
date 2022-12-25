@@ -11,6 +11,10 @@ const auth = require('./auth.js');
 // App instance
 const app = express();
 
+// Http server and socket setup
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
 // App use pug engine
 app.set('view engine', 'pug');
 app.set('views', './views/pug');
@@ -48,6 +52,11 @@ myDB(async client => {
   
   // App load auth.js
   auth(app, myDataBase);
+
+  // Socket receive connection request
+  io.on('connection', socket => {
+    console.log('A user has connected');
+  });
   
 }).catch(err => {
   app.route('/').get((req, res) => {
