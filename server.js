@@ -11,7 +11,7 @@ const auth = require('./auth.js');
 // App instance
 const app = express();
 
-// Http server and socket setup
+// App create socket
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
@@ -53,8 +53,13 @@ myDB(async client => {
   // App load auth.js
   auth(app, myDataBase);
 
+  // Count of socket communication users
+  let currentUsers = 0;
+
   // Socket receive connection request
   io.on('connection', socket => {
+    ++currentUsers;
+    io.emit('user count', currentUsers);
     console.log('A user has connected');
   });
   
