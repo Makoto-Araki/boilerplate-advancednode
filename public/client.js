@@ -9,6 +9,12 @@ $(document).ready(function () {
     $('#messages').append($('<li>').html('<b>' + message + '</b>'));
   });
 
+  // Unknown code
+  socket.on('chat message', data => {
+    console.log('socket.on 1');
+    $('#messages').append($('<li>').text(`${data.username}: ${data.message}`));
+  });
+  
   // Form submittion with new message in field with id 'm'
   $('form').submit(function () {
     let messageToSend = $('#m').val();
